@@ -132,18 +132,23 @@ final class IOKitBridge {
     /// 该接口在系统内是公开行为，即使没有 IOKit 权限也通常可用。
     func powerSourceDescription() -> [String: Any]? {
         guard isPowerSourcesAvailable,
-              let infoRef = copyPowerSourcesInfo?().takeRetainedValue(),
-              let listRef = copyPowerSourcesList?(infoRef).takeRetainedValue()
+              let infoBox = copyPowerSourcesInfo?()
         else { return nil }
+        let infoRef = infoBox.takeRetainedValue()
 
-        let list = listRef as NSArray
-        for item in list {
-            let itemRef: CFTypeRef = item as AnyObject
-            if let desc = getPowerSourceDescription?(infoRef, itemRef) {
-                // 按 CoreFoundation 命名规则，"Get" 系列返回 +0 引用，此处不可 release。
-                let dict = desc.takeUnretainedValue()
-                return dict as? [String: Any]
-            }
+        guard let listBox = copyPowerSourcesList?(infoRef) else { return nil }
+        let listRef = listBox.takeRetainedValue()
+
+        let count = CFArrayGetCount(listRef)
+        guard count > 0 else { return nil }
+
+        for index in 0..<count {
+            guard let rawItem = CFArrayGetValueAtIndex(listRef, index) else { continue }
+            let itemRef = Unmanaged<CFTypeRef>.fromOpaque(rawItem).takeUnretainedValue()
+            guard let descBox = getPowerSourceDescription?(infoRef, itemRef) else { continue }
+            // 按 CoreFoundation 命名规则，"Get" 系列返回 +0 引用，此处不可 release。
+            let dict = descBox.takeUnretainedValue()
+            if let result = dict as? [String: Any] { return result }
         }
         return nil
     }

@@ -108,7 +108,7 @@ struct ContentView: View {
                 HStack(alignment: .lastTextBaseline, spacing: 6) {
                     Text(powerText)
                         .font(.system(size: 44, weight: .bold, design: .rounded))
-                        .monospacedDigit()
+                        .monoDigits()
                         .foregroundColor(snapshot.powerWatts == nil ? Palette.tertiaryText : powerTint)
                     Text(snapshot.powerWatts == nil ? "" : "W")
                         .font(.system(size: 18, weight: .semibold))
@@ -367,6 +367,20 @@ struct ContentView: View {
     }
 }
 
+// MARK: - iOS 14 兼容层
+
+private extension View {
+    /// monospacedDigit() 从 iOS 15 起才可用，低版本静默降级。
+    @ViewBuilder
+    func monoDigits() -> some View {
+        if #available(iOS 15.0, *) {
+            self.monospacedDigit()
+        } else {
+            self
+        }
+    }
+}
+
 // MARK: - 组件
 
 private struct Card<Content: View>: View {
@@ -451,7 +465,7 @@ private struct RingView: View {
                 VStack(spacing: 1) {
                     Text(value)
                         .font(.system(size: 20, weight: .bold, design: .rounded))
-                        .monospacedDigit()
+                        .monoDigits()
                         .foregroundColor(Palette.primaryText)
                     if let caption = caption {
                         Text(caption)
@@ -482,7 +496,7 @@ private struct MiniStat: View {
                 .foregroundColor(Palette.tertiaryText)
             Text(value)
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
-                .monospacedDigit()
+                .monoDigits()
                 .foregroundColor(tint)
         }
         .frame(maxWidth: .infinity)
@@ -501,7 +515,7 @@ private struct InfoRow: View {
             Spacer()
             Text(value)
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .monospacedDigit()
+                .monoDigits()
                 .foregroundColor(Palette.secondaryText)
         }
         .padding(.vertical, 10)

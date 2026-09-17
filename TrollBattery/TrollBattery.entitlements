@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- 平台级应用：TrollStore 应用的标准特权，解锁大量系统资源访问 -->
+	<key>platform-application</key>
+	<true/>
+
+	<!-- 解除沙盒，允许直接访问 IORegistry -->
+	<key>com.apple.private.security.no-sandbox</key>
+	<true/>
+
+	<!-- 允许访问应用容器之外的数据路径 -->
+	<key>com.apple.private.security.storage.AppDataContainers</key>
+	<true/>
+
+	<!-- IOKit 电池 / 电源数据访问例外 -->
+	<key>com.apple.private.iokit.batterydata</key>
+	<true/>
+	<key>com.apple.private.iokit.powerdata</key>
+	<true/>
+	<key>com.apple.private.iokit.IOPMpowerdomain</key>
+	<true/>
+	<key>com.apple.private.iokit.nvram-write-access</key>
+	<true/>
+
+	<!-- 允许以用户客户端身份打开 IOKit 服务 -->
+	<key>com.apple.security.exception.iokit-user-client-class</key>
+	<array>
+		<string>AppleSMC</string>
+		<string>AppleSmartBattery</string>
+		<string>IOPMPowerSource</string>
+		<string>AppleARMPMU</string>
+	</array>
+
+	<!-- 开发调试用 -->
+	<key>get-task-allow</key>
+	<true/>
+	<key>task_for_pid-allow</key>
+	<true/>
+
+	<!-- 运行未签名的动态库（保留扩展空间） -->
+	<key>com.apple.private.amfi.can-load-cdhash</key>
+	<true/>
+</dict>
+</plist>

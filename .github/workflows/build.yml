@@ -1,0 +1,102 @@
+name: Build TrollBattery IPA
+
+# 推送到 main/master 即自动出包；也可在 Actions 页面手动触发。
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build unsigned IPA
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+
+      - name: Build app without code signing
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project TrollBattery.xcodeproj \
+            -scheme TrollBattery \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath ./DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Locate built app
+        id: locate
+        run: |
+          APP=$(find ./DerivedData/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -n 1)
+          if [ -z "$APP" ]; then
+            echo "::error::未找到编译产物 .app"
+            exit 1
+          fi
+          echo "app=$APP" >> "$GITHUB_OUTPUT"
+          echo "产物路径：$APP"
+          ls -l "$APP"
+
+      - name: Inject entitlements (ldid)
+        run: |
+          brew install ldid || true
+          APP="${{ steps.locate.outputs.app }}"
+          BIN="$APP/TrollBattery"
+          if command -v ldid >/dev/null 2>&1; then
+            ldid -STrollBattery/TrollBattery.entitlements "$BIN"
+            echo "已注入 entitlements："
+            ldid -e "$BIN" || true
+          else
+            echo "::warning::ldid 不可用，跳过 entitlements 注入"
+          fi
+
+      - name: Package unsigned IPA
+        run: |
+          APP="${{ steps.locate.outputs.app }}"
+          rm -rf Payload TrollBattery.ipa
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qry TrollBattery.ipa Payload
+          rm -rf Payload
+          ls -lh TrollBattery.ipa
+          echo "IPA 大小：$(du -h TrollBattery.ipa | cut -f1)"
+
+      - name: Upload IPA as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrollBattery-unsigned-ipa
+          path: TrollBattery.ipa
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish IPA to Release
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            TAG="${{ github.ref_name }}"
+          else
+            TAG="latest"
+          fi
+          echo "release tag: $TAG"
+          gh release create "$TAG" TrollBattery.ipa \
+            --title "TrollBattery $TAG" \
+            --notes "TrollStore 用未签名 IPA。下载后直接用 TrollStore 打开安装。" \
+            || gh release upload "$TAG" TrollBattery.ipa --clobber

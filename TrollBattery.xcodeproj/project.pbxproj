@@ -1,0 +1,286 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ABCDEF000000000000000019 /* TrollBatteryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000012 /* TrollBatteryApp.swift */; };
+		ABCDEF00000000000000001A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000013 /* ContentView.swift */; };
+		ABCDEF00000000000000001B /* BatteryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000014 /* BatteryReader.swift */; };
+		ABCDEF00000000000000001C /* IOKitBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000015 /* IOKitBridge.swift */; };
+		ABCDEF00000000000000001D /* BatterySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000016 /* BatterySnapshot.swift */; };
+		ABCDEF00000000000000001E /* HistoryChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000017 /* HistoryChart.swift */; };
+		ABCDEF00000000000000001F /* BatteryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000018 /* BatteryModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		ABCDEF000000000000000005 /* TrollBattery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollBattery.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABCDEF000000000000000010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ABCDEF000000000000000011 /* TrollBattery.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TrollBattery.entitlements; sourceTree = "<group>"; };
+		ABCDEF000000000000000012 /* TrollBatteryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrollBatteryApp.swift; sourceTree = "<group>"; };
+		ABCDEF000000000000000013 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		ABCDEF000000000000000014 /* BatteryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryReader.swift; sourceTree = "<group>"; };
+		ABCDEF000000000000000015 /* IOKitBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOKitBridge.swift; sourceTree = "<group>"; };
+		ABCDEF000000000000000016 /* BatterySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatterySnapshot.swift; sourceTree = "<group>"; };
+		ABCDEF000000000000000017 /* HistoryChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryChart.swift; sourceTree = "<group>"; };
+		ABCDEF000000000000000018 /* BatteryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryModel.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ABCDEF00000000000000000E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ABCDEF000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				ABCDEF000000000000000004 /* TrollBattery */,
+				ABCDEF000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ABCDEF000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ABCDEF000000000000000005 /* TrollBattery.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ABCDEF000000000000000004 /* TrollBattery */ = {
+			isa = PBXGroup;
+			children = (
+				ABCDEF000000000000000012 /* TrollBatteryApp.swift */,
+				ABCDEF000000000000000013 /* ContentView.swift */,
+				ABCDEF000000000000000018 /* BatteryModel.swift */,
+				ABCDEF000000000000000016 /* BatterySnapshot.swift */,
+				ABCDEF000000000000000014 /* BatteryReader.swift */,
+				ABCDEF000000000000000015 /* IOKitBridge.swift */,
+				ABCDEF000000000000000017 /* HistoryChart.swift */,
+				ABCDEF000000000000000010 /* Info.plist */,
+				ABCDEF000000000000000011 /* TrollBattery.entitlements */,
+			);
+			path = TrollBattery;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ABCDEF000000000000000006 /* TrollBattery */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABCDEF000000000000000008 /* Build configuration list for PBXNativeTarget "TrollBattery" */;
+			buildPhases = (
+				ABCDEF00000000000000000D /* Sources */,
+				ABCDEF00000000000000000E /* Frameworks */,
+				ABCDEF00000000000000000F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TrollBattery;
+			productName = TrollBattery;
+			productReference = ABCDEF000000000000000005 /* TrollBattery.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ABCDEF000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					ABCDEF000000000000000006 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = ABCDEF000000000000000007 /* Build configuration list for PBXProject "TrollBattery" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = ABCDEF000000000000000002;
+			productRefGroup = ABCDEF000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ABCDEF000000000000000006 /* TrollBattery */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ABCDEF00000000000000000F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ABCDEF00000000000000000D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABCDEF000000000000000019 /* TrollBatteryApp.swift in Sources */,
+				ABCDEF00000000000000001A /* ContentView.swift in Sources */,
+				ABCDEF00000000000000001F /* BatteryModel.swift in Sources */,
+				ABCDEF00000000000000001D /* BatterySnapshot.swift in Sources */,
+				ABCDEF00000000000000001B /* BatteryReader.swift in Sources */,
+				ABCDEF00000000000000001C /* IOKitBridge.swift in Sources */,
+				ABCDEF00000000000000001E /* HistoryChart.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		ABCDEF000000000000000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		ABCDEF00000000000000000A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ABCDEF00000000000000000B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = TrollBattery/TrollBattery.entitlements;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TrollBattery/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.david.trollbattery;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ABCDEF00000000000000000C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = TrollBattery/TrollBattery.entitlements;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TrollBattery/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.david.trollbattery;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ABCDEF000000000000000007 /* Build configuration list for PBXProject "TrollBattery" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABCDEF000000000000000009 /* Debug */,
+				ABCDEF00000000000000000A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABCDEF000000000000000008 /* Build configuration list for PBXNativeTarget "TrollBattery" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABCDEF00000000000000000B /* Debug */,
+				ABCDEF00000000000000000C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ABCDEF000000000000000001 /* Project object */;
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Widget Extension 由系统进程加载，同样需要平台级签名才能在 TrollStore 环境生效 -->
+	<key>platform-application</key>
+	<true/>
+
+	<key>com.apple.private.security.no-sandbox</key>
+	<true/>
+
+	<key>get-task-allow</key>
+	<true/>
+</dict>
+</plist>

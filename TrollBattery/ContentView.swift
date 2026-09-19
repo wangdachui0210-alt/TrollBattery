@@ -217,6 +217,27 @@ struct ContentView: View {
                     .labelsHidden()
                 }
 
+                Divider().background(Palette.divider)
+
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("灵动岛实时功率")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(Palette.primaryText)
+                        Text(liveActivityCaption)
+                            .font(.system(size: 11))
+                            .foregroundColor(Palette.tertiaryText)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer()
+                    Toggle("", isOn: Binding(
+                        get: { model.liveActivityOn },
+                        set: { model.setLiveActivity($0) }
+                    ))
+                    .labelsHidden()
+                    .disabled(!model.liveActivitySupported)
+                }
+
                 Button(action: { model.refresh() }) {
                     HStack(spacing: 6) {
                         Image(systemName: "arrow.clockwise")
@@ -328,6 +349,13 @@ struct ContentView: View {
     private var capacityCaption: String? {
         guard let maxCap = snapshot.currentMaxCapacity, let design = snapshot.designCapacity else { return nil }
         return "\(maxCap) / \(design) mAh"
+    }
+
+    private var liveActivityCaption: String {
+        if !model.liveActivitySupported { return "需 iOS 16.1 及以上" }
+        if let message = model.liveActivityMessage { return message }
+        if model.liveActivityOn { return "已开启 · 灵动岛 / 锁屏" }
+        return "在灵动岛与锁屏显示实时功率"
     }
 
     private var lossText: String {

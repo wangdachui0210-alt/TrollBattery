@@ -52,18 +52,35 @@ jobs:
           echo "app=$APP" >> "$GITHUB_OUTPUT"
           echo "产物路径：$APP"
           ls -l "$APP"
+          echo "--- PlugIns ---"
+          ls -l "$APP/PlugIns" || echo "::warning::PlugIns 目录不存在"
 
       - name: Inject entitlements (ldid)
         run: |
           brew install ldid || true
           APP="${{ steps.locate.outputs.app }}"
-          BIN="$APP/TrollBattery"
-          if command -v ldid >/dev/null 2>&1; then
-            ldid -STrollBattery/TrollBattery.entitlements "$BIN"
-            echo "已注入 entitlements："
-            ldid -e "$BIN" || true
+          if ! command -v ldid >/dev/null 2>&1; then
+            echo "::error::ldid 不可用，无法注入 entitlements"
+            exit 1
+          fi
+
+          # 主程序
+          ldid -STrollBattery/TrollBattery.entitlements "$APP/TrollBattery"
+          echo "=== 主程序 entitlements ==="
+          ldid -e "$APP/TrollBattery" || true
+
+          # 嵌入式 App Extension（灵动岛 Widget）必须同样注入，否则系统不会加载
+          if [ -d "$APP/PlugIns" ]; then
+            for EXT in "$APP/PlugIns"/*.appex; do
+              [ -e "$EXT" ] || continue
+              EXT_NAME=$(basename "$EXT" .appex)
+              ldid -STrollBatteryWidget/TrollBatteryWidget.entitlements "$EXT/$EXT_NAME"
+              echo "=== 扩展 $EXT_NAME entitlements ==="
+              ldid -e "$EXT/$EXT_NAME" || true
+            done
           else
-            echo "::warning::ldid 不可用，跳过 entitlements 注入"
+            echo "::error::未找到 PlugIns 目录，Widget Extension 未被打包"
+            exit 1
           fi
 
       - name: Package unsigned IPA

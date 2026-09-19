@@ -11,6 +11,7 @@ PROJECT="TrollBattery.xcodeproj"
 SCHEME="TrollBattery"
 BIN_NAME="TrollBattery"
 ENTITLEMENTS="TrollBattery/TrollBattery.entitlements"
+WIDGET_ENTITLEMENTS="TrollBatteryWidget/TrollBatteryWidget.entitlements"
 DERIVED="build/DerivedData"
 IPA_NAME="TrollBattery.ipa"
 

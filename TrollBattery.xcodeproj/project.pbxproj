@@ -14,6 +14,7 @@
 		ABCDEF00000000000000001D /* BatterySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000016 /* BatterySnapshot.swift */; };
 		ABCDEF00000000000000001E /* HistoryChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000017 /* HistoryChart.swift */; };
 		ABCDEF00000000000000001F /* BatteryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000018 /* BatteryModel.swift */; };
+		ABCDEF000000000000000047 /* HIDSensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000046 /* HIDSensors.swift */; };
 		ABCDEF000000000000000040 /* BatteryActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000020 /* BatteryActivityAttributes.swift */; };
 		ABCDEF000000000000000042 /* LiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000021 /* LiveActivityController.swift */; };
 		ABCDEF000000000000000041 /* BatteryActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF000000000000000020 /* BatteryActivityAttributes.swift */; };
@@ -58,6 +59,7 @@
 		ABCDEF000000000000000016 /* BatterySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatterySnapshot.swift; sourceTree = "<group>"; };
 		ABCDEF000000000000000017 /* HistoryChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryChart.swift; sourceTree = "<group>"; };
 		ABCDEF000000000000000018 /* BatteryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryModel.swift; sourceTree = "<group>"; };
+		ABCDEF000000000000000046 /* HIDSensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDSensors.swift; sourceTree = "<group>"; };
 		ABCDEF000000000000000020 /* BatteryActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryActivityAttributes.swift; sourceTree = "<group>"; };
 		ABCDEF000000000000000021 /* LiveActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityController.swift; sourceTree = "<group>"; };
 		ABCDEF000000000000000022 /* TrollBatteryWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrollBatteryWidgetBundle.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				ABCDEF000000000000000016 /* BatterySnapshot.swift */,
 				ABCDEF000000000000000014 /* BatteryReader.swift */,
 				ABCDEF000000000000000015 /* IOKitBridge.swift */,
+				ABCDEF000000000000000046 /* HIDSensors.swift */,
 				ABCDEF000000000000000017 /* HistoryChart.swift */,
 				ABCDEF000000000000000020 /* BatteryActivityAttributes.swift */,
 				ABCDEF000000000000000021 /* LiveActivityController.swift */,
@@ -235,6 +238,7 @@
 				ABCDEF00000000000000001D /* BatterySnapshot.swift in Sources */,
 				ABCDEF00000000000000001B /* BatteryReader.swift in Sources */,
 				ABCDEF00000000000000001C /* IOKitBridge.swift in Sources */,
+				ABCDEF000000000000000047 /* HIDSensors.swift in Sources */,
 				ABCDEF00000000000000001E /* HistoryChart.swift in Sources */,
 				ABCDEF000000000000000040 /* BatteryActivityAttributes.swift in Sources */,
 				ABCDEF000000000000000042 /* LiveActivityController.swift in Sources */,

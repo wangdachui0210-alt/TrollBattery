@@ -103,22 +103,22 @@ struct ContentView: View {
     private var powerCard: some View {
         Card {
             VStack(alignment: .leading, spacing: 14) {
-                SectionTitle(text: "实时充电功率", icon: "bolt.fill", tint: Palette.orange)
+                SectionTitle(text: "实时功率", icon: "bolt.fill", tint: Palette.orange)
 
                 HStack(alignment: .lastTextBaseline, spacing: 6) {
                     Text(powerText)
                         .font(.system(size: 44, weight: .bold, design: .rounded))
                         .monoDigits()
-                        .foregroundColor(snapshot.powerWatts == nil ? Palette.tertiaryText : powerTint)
-                    Text(snapshot.powerWatts == nil ? "" : "W")
+                        .foregroundColor(snapshot.primaryWatts == nil ? Palette.tertiaryText : powerTint)
+                    Text(snapshot.primaryWatts == nil ? "" : "W")
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(Palette.secondaryText)
                     Spacer()
                     VStack(alignment: .trailing, spacing: 2) {
-                        Text(snapshot.powerDirection)
+                        Text(snapshot.primaryWattsLabel)
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(Palette.secondaryText)
-                        Text(snapshot.isCharging == true ? "充电功率" : "功耗")
+                        Text(powerSideCaption)
                             .font(.system(size: 10))
                             .foregroundColor(Palette.tertiaryText)
                     }
@@ -128,14 +128,14 @@ struct ContentView: View {
 
                 HStack(spacing: 0) {
                     MiniStat(
-                        title: "电流",
-                        value: snapshot.currentAmps.map { String(format: "%.0f mA", $0 * 1000) } ?? "N/A",
-                        tint: Palette.blue
+                        title: "输入功率",
+                        value: snapshot.inputWatts.map { String(format: "%.2f W", $0) } ?? "N/A",
+                        tint: Palette.green
                     )
                     MiniStat(
-                        title: "电压",
-                        value: snapshot.voltageMV.map { String(format: "%.2f V", Double($0) / 1000.0) } ?? "N/A",
-                        tint: Palette.teal
+                        title: "电池功率",
+                        value: snapshot.batteryWatts.map { String(format: "%.2f W", $0) } ?? "N/A",
+                        tint: Palette.orange
                     )
                     MiniStat(
                         title: "温度",
@@ -143,8 +143,54 @@ struct ContentView: View {
                         tint: temperatureTint
                     )
                 }
+
+                Divider().background(Palette.divider)
+
+                HStack(spacing: 0) {
+                    MiniStat(
+                        title: "输入电流",
+                        value: snapshot.usbInputCurrent.map { String(format: "%.2f A", $0) } ?? "N/A",
+                        tint: Palette.blue
+                    )
+                    MiniStat(
+                        title: "输入电压",
+                        value: snapshot.usbInputVoltage.map { String(format: "%.2f V", $0) } ?? "N/A",
+                        tint: Palette.teal
+                    )
+                    MiniStat(
+                        title: "协商档位",
+                        value: snapshot.adapterNegotiatedText ?? "N/A",
+                        tint: Palette.purple
+                    )
+                }
+
+                if let adapterText = adapterInfoText {
+                    Text(adapterText)
+                        .font(.system(size: 11))
+                        .foregroundColor(Palette.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
         }
+    }
+
+    private var powerSideCaption: String {
+        if snapshot.isPluggedIn == true {
+            return "与充电器功率计同侧"
+        }
+        return "电池端功耗"
+    }
+
+    private var adapterInfoText: String? {
+        guard snapshot.isPluggedIn == true else { return nil }
+        var parts: [String] = []
+        if let name = snapshot.adapterName, !name.isEmpty { parts.append(name) }
+        if let v = snapshot.adapterVoltageMV, let i = snapshot.adapterCurrentMA {
+            parts.append(String(format: "协商 %.2fV / %.2fA", Double(v) / 1000.0, Double(i) / 1000.0))
+        }
+        if snapshot.isWirelessInput { parts.append("无线输入") }
+        guard !parts.isEmpty else { return nil }
+        return "充电器：" + parts.joined(separator: " · ")
     }
 
     // MARK: - 容量明细
@@ -385,6 +431,17 @@ struct ContentView: View {
         temp        : \(snapshot.temperatureC.map { String(format: "%.2f", $0) } ?? "nil")
         charging    : \(snapshot.isCharging.map { "\($0)" } ?? "nil")
         plugged     : \(snapshot.isPluggedIn.map { "\($0)" } ?? "nil")
+        --- 输入端 (HID 传感器) ---
+        usbIn V/A   : \(snapshot.usbInputVoltage.map { String(format: "%.3f", $0) } ?? "nil") / \(snapshot.usbInputCurrent.map { String(format: "%.3f", $0) } ?? "nil")
+        inputW      : \(snapshot.inputWatts.map { String(format: "%.3f", $0) } ?? "nil")
+        wirelessV   : \(snapshot.wirelessInputVoltage.map { String(format: "%.3f", $0) } ?? "nil")
+        --- 电池端 ---
+        regV×I W    : \(snapshot.registryBatteryWatts.map { String(format: "%.3f", $0) } ?? "nil")
+        sensorV×I W : \(snapshot.sensorBatteryWatts.map { String(format: "%.3f", $0) } ?? "nil")
+        --- 充电器详情 (powerd) ---
+        adapter     : \(snapshot.adapterName ?? "nil")
+        negV/mA     : \(snapshot.adapterVoltageMV.map(String.init) ?? "nil") / \(snapshot.adapterCurrentMA.map(String.init) ?? "nil")
+        profiles    : \(snapshot.adapterProfiles.joined(separator: ","))
         """
     }
 

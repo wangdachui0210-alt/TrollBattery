@@ -42,7 +42,8 @@ final class BatteryModel: ObservableObject {
     func refresh() {
         let current = BatteryReader.read()
         snapshot = current
-        if let watts = current.powerWatts {
+        // 曲线跟踪主功率：插电时为输入端（对标充电器功率计），放电时为电池端功耗
+        if let watts = current.primaryWatts {
             history.append(PowerSample(date: current.timestamp, watts: watts))
             if history.count > maxSamples {
                 history.removeFirst(history.count - maxSamples)

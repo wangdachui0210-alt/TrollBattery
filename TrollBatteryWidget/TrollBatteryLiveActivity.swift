@@ -47,11 +47,19 @@ private func levelText(_ state: BatteryActivityAttributes.ContentState) -> Strin
 }
 
 private func currentText(_ state: BatteryActivityAttributes.ContentState) -> String {
-    String(format: "%d mA", state.currentMA)
+    // 插电且有输入电流时优先显示输入电流，否则显示电池端电流
+    if state.isPluggedIn && state.inputCurrent > 0.01 {
+        return String(format: "%.2f A", state.inputCurrent)
+    }
+    return String(format: "%d mA", state.currentMA)
 }
 
 private func voltageText(_ state: BatteryActivityAttributes.ContentState) -> String {
-    String(format: "%.2f V", Double(state.voltageMV) / 1000.0)
+    // 插电时优先显示输入电压（与充电器/功率计同一侧），否则显示电池端电压
+    if state.isPluggedIn && state.inputVoltage > 0.5 {
+        return String(format: "%.2f V", state.inputVoltage)
+    }
+    return String(format: "%.2f V", Double(state.voltageMV) / 1000.0)
 }
 
 private func temperatureText(_ state: BatteryActivityAttributes.ContentState) -> String {

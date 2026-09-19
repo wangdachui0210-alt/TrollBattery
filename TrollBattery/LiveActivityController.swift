@@ -173,7 +173,9 @@ final class LiveActivityController {
     @available(iOS 16.1, *)
     private func makeState(from snapshot: BatterySnapshot) -> BatteryActivityAttributes.ContentState {
         BatteryActivityAttributes.ContentState(
-            watts: snapshot.powerWatts ?? 0,
+            watts: snapshot.primaryWatts ?? 0,
+            wattsLabel: snapshot.primaryWattsLabel,
+            batteryWatts: snapshot.batteryWatts ?? 0,
             signedWatts: snapshot.signedPowerWatts ?? 0,
             levelPercent: snapshot.levelPercent ?? 0,
             isCharging: snapshot.isCharging == true,
@@ -181,7 +183,9 @@ final class LiveActivityController {
             isFull: snapshot.isFull == true,
             statusText: snapshot.statusText,
             voltageMV: snapshot.voltageMV ?? 0,
-            currentMA: abs(snapshot.instantAmperageMA ?? snapshot.amperageMA ?? 0),
+            currentMA: Int(((snapshot.currentAmps ?? 0) * 1000)),
+            inputVoltage: snapshot.usbInputVoltage ?? 0,
+            inputCurrent: snapshot.usbInputCurrent ?? 0,
             temperatureC: snapshot.temperatureC ?? 0,
             updatedAt: snapshot.timestamp
         )

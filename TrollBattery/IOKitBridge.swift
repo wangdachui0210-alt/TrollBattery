@@ -39,6 +39,9 @@ final class IOKitBridge {
     private typealias IOPSGetPowerSourceDescriptionFn =
         @convention(c) (CFTypeRef, CFTypeRef) -> Unmanaged<CFDictionary>?
 
+    private typealias IOPSCopyExternalPowerAdapterDetailsFn =
+        @convention(c) () -> Unmanaged<CFDictionary>?
+
     // MARK: - 已解析符号
 
     private let serviceMatching: IOServiceMatchingFn?
@@ -49,6 +52,7 @@ final class IOKitBridge {
     private let copyPowerSourcesInfo: IOPSCopyPowerSourcesInfoFn?
     private let copyPowerSourcesList: IOPSCopyPowerSourcesListFn?
     private let getPowerSourceDescription: IOPSGetPowerSourceDescriptionFn?
+    private let copyExternalPowerAdapterDetails: IOPSCopyExternalPowerAdapterDetailsFn?
 
     private let handle: UnsafeMutableRawPointer?
 
@@ -84,6 +88,7 @@ final class IOKitBridge {
         copyPowerSourcesInfo = Self.symbol(h, "IOPSCopyPowerSourcesInfo", as: IOPSCopyPowerSourcesInfoFn.self)
         copyPowerSourcesList = Self.symbol(h, "IOPSCopyPowerSourcesList", as: IOPSCopyPowerSourcesListFn.self)
         getPowerSourceDescription = Self.symbol(h, "IOPSGetPowerSourceDescription", as: IOPSGetPowerSourceDescriptionFn.self)
+        copyExternalPowerAdapterDetails = Self.symbol(h, "IOPSCopyExternalPowerAdapterDetails", as: IOPSCopyExternalPowerAdapterDetailsFn.self)
     }
 
     private static func symbol<T>(_ handle: UnsafeMutableRawPointer?, _ name: String, as type: T.Type) -> T? {
@@ -124,6 +129,17 @@ final class IOKitBridge {
 
         let dict = unmanaged.takeRetainedValue()
         return dict as? [String: Any]
+    }
+
+    // MARK: - 充电器详情（协商电压 / 电流 / PD 档位）
+
+    /// 通过 powerd 读取当前充电器的协商详情。
+    /// 含：名称（Name）、协商电压/电流（Voltage/Current，mV/mA）、
+    /// 全部 PD 档位（UsbHvcMenu）、是否无线（IsWireless）等。
+    func adapterDetails() -> [String: Any]? {
+        guard let fn = copyExternalPowerAdapterDetails else { return nil }
+        guard let box = fn() else { return nil }
+        return box.takeRetainedValue() as? [String: Any]
     }
 
     // MARK: - 公开电源接口（回退）

@@ -18,8 +18,12 @@ struct BatteryActivityAttributes: ActivityAttributes {
 
     /// 动态内容：每次采样都会整体替换。
     struct ContentState: Codable, Hashable {
-        /// 电池端功率绝对值，单位 W
+        /// 主显示功率（插电=输入端，放电=电池端），单位 W
         var watts: Double
+        /// 主显示功率标签：「输入端」/「无线输入端」/「电池端」
+        var wattsLabel: String
+        /// 电池端功率绝对值，单位 W（插电时的第二参考值）
+        var batteryWatts: Double
         /// 电池端功率，带方向（充电为正、放电为负）
         var signedWatts: Double
         /// 当前电量 0...100
@@ -29,10 +33,14 @@ struct BatteryActivityAttributes: ActivityAttributes {
         var isFull: Bool
         /// 状态文案，如「充电中」
         var statusText: String
-        /// 电池电压 mV
+        /// 电池电压 mV（无传感器数据时为 0，展示层用输入 V 代替）
         var voltageMV: Int
         /// 电池电流 mA（绝对值）
         var currentMA: Int
+        /// 输入端电压 V（0 = 无数据）
+        var inputVoltage: Double
+        /// 输入端电流 A（0 = 无数据）
+        var inputCurrent: Double
         /// 电池温度 ℃
         var temperatureC: Double
         /// 本次采样时刻，用于在界面上标注数据新鲜度

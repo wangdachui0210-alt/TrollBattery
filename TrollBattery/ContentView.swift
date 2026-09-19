@@ -387,7 +387,7 @@ struct ContentView: View {
     }
 
     private var powerText: String {
-        guard let power = snapshot.powerWatts else { return "—" }
+        guard let power = snapshot.primaryWatts else { return "—" }
         if power < 0.01 { return "0.00" }
         return String(format: "%.2f", power)
     }
@@ -441,7 +441,7 @@ struct ContentView: View {
         --- 充电器详情 (powerd) ---
         adapter     : \(snapshot.adapterName ?? "nil")
         negV/mA     : \(snapshot.adapterVoltageMV.map(String.init) ?? "nil") / \(snapshot.adapterCurrentMA.map(String.init) ?? "nil")
-        profiles    : \(snapshot.adapterProfiles.joined(separator: ","))
+        profiles    : \(snapshot.adapterProfiles.isEmpty ? "nil" : snapshot.adapterProfiles.map { "\($0.voltageMV)mV/\($0.currentMA)mA" }.joined(separator: " "))
         """
     }
 

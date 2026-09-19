@@ -78,8 +78,7 @@ final class HIDSensors {
               let copyProperty = sym("IOHIDServiceClientCopyProperty", CopyPropertyFn.self),
               let copyEvent = sym("IOHIDServiceClientCopyEvent", CopyEventFn.self),
               let getFloat = sym("IOHIDEventGetFloatValue", GetFloatFn.self),
-              let clientBox = create(kCFAllocatorDefault),
-              let client = clientBox.takeRetainedValue()
+              let clientBox = create(kCFAllocatorDefault)
         else {
             self.client = "" as CFTypeRef
             self.setMatching = { _, _ in }
@@ -90,6 +89,7 @@ final class HIDSensors {
             self.isAvailable = false
             return
         }
+        let client = clientBox.takeRetainedValue()
 
         self.client = client
         self.setMatching = setMatching

@@ -5,12 +5,14 @@
 //  Live Activity 的启动 / 刷新 / 结束。
 //
 //  设计约束（务必留意）：
-//  1. 全部 ActivityKit 调用都在 @available(iOS 16.1, *) 保护下，
-//     低版本系统静默跳过，不会影响 App 其它功能。
-//  2. iOS 会在 App 进入后台 / 锁屏后对 Live Activity 更新做限流，
-//     实测后台约 30 秒后更新会被系统静默丢弃（不报错）。
+//  1. 主 App 的 deployment target 是 14.0，而 ActivityKit 需要 16.1。
+//     这里把所有 ActivityKit 调用收进 @available(iOS 16.1, *) 的私有方法，
+//     公开方法只做一次 #available 判断后转发 —— 这样方法体（含 Task 闭包）
+//     整体处于可用性上下文中，不会踩「转义闭包不继承 if #available」的坑。
+//  2. 存储属性不能标注 @available，故用 Any 存储 + 计算属性转发。
+//  3. iOS 会在 App 进入后台 / 锁屏约 30 秒后对 Live Activity 更新做静默限流，
 //     因此后台期间灵动岛会停在最后一次成功推送的数值。
-//  3. 推送做了节流，避免高频 refresh 触发系统熔断。
+//  4. 推送做了节流，避免高频 refresh 触发系统熔断。
 //
 
 import Foundation
@@ -27,8 +29,14 @@ final class LiveActivityController {
 
     // MARK: - 状态
 
+    /// 存储层：用 Any 持有真实活动对象
+    private var activityStorage: Any?
+
     @available(iOS 16.1, *)
-    private var activity: Activity<BatteryActivityAttributes>?
+    private var activity: Activity<BatteryActivityAttributes>? {
+        get { activityStorage as? Activity<BatteryActivityAttributes> }
+        set { activityStorage = newValue }
+    }
 
     /// 最近一次成功推送时刻，用于节流
     private var lastPushAt: Date = .distantPast
@@ -36,12 +44,13 @@ final class LiveActivityController {
     /// 最小推送间隔（秒）。低于系统建议阈值会被限流丢弃。
     private let minPushInterval: TimeInterval = 2.0
 
-    /// 系统层面是否开放实时活动（用户可在「设置 › 巨魔电池」中单独关闭）
+    /// 系统是否支持实时活动
     static var isSupported: Bool {
         if #available(iOS 16.1, *) { return true }
         return false
     }
 
+    /// 系统层面是否开放实时活动（用户可在「设置 › 巨魔电池」中单独关闭）
     var isSystemEnabled: Bool {
         if #available(iOS 16.1, *) {
             return ActivityAuthorizationInfo().areActivitiesEnabled
@@ -58,24 +67,45 @@ final class LiveActivityController {
         return false
     }
 
-    /// 无法启动时给出的原因，用于界面提示
+    /// 无法启动时的原因，用于界面提示
     var unavailableReason: String? {
         guard Self.isSupported else { return "当前系统低于 iOS 16.1，不支持实时活动" }
         guard isSystemEnabled else { return "实时活动已被系统关闭，请在「设置 › 巨魔电池」中开启" }
         return nil
     }
 
-    // MARK: - 启动
+    // MARK: - 公开接口
 
     @discardableResult
     func start(with snapshot: BatterySnapshot) -> Bool {
         guard #available(iOS 16.1, *) else { return false }
+        return startAvailable(snapshot)
+    }
+
+    func push(_ snapshot: BatterySnapshot, force: Bool = false) {
+        guard #available(iOS 16.1, *) else { return }
+        pushAvailable(snapshot, force: force)
+    }
+
+    func stop() {
+        guard #available(iOS 16.1, *) else { return }
+        stopAvailable()
+    }
+
+    // MARK: - 实现（iOS 16.1+）
+
+    @available(iOS 16.1, *)
+    @discardableResult
+    private func startAvailable(_ snapshot: BatterySnapshot) -> Bool {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return false }
 
-        // 已有活跃活动：直接刷新并复用
-        if let existing = activity, existing.activityState == .active {
-            push(snapshot, force: true)
-            return true
+        // 已有活动的处理
+        if let existing = activity {
+            if existing.activityState == .active {
+                pushAvailable(snapshot, force: true)
+                return true
+            }
+            activity = nil
         }
 
         let attributes = BatteryActivityAttributes(deviceModel: UIDevice.current.model)
@@ -103,20 +133,16 @@ final class LiveActivityController {
         }
     }
 
-    // MARK: - 刷新
-
-    /// 把最新采样推给灵动岛。force 为 true 时跳过节流。
-    func push(_ snapshot: BatterySnapshot, force: Bool = false) {
-        guard #available(iOS 16.1, *) else { return }
-        guard let activity = activity, activity.activityState == .active else { return }
+    @available(iOS 16.1, *)
+    private func pushAvailable(_ snapshot: BatterySnapshot, force: Bool = false) {
+        guard let target = activity, target.activityState == .active else { return }
 
         let now = Date()
         if !force && now.timeIntervalSince(lastPushAt) < minPushInterval { return }
         lastPushAt = now
 
         let state = makeState(from: snapshot)
-        let target = activity
-        // staleDate 设为 2 分钟后：若期间无新数据，系统会自行把内容标记为过期
+        // staleDate：若 2 分钟内无新数据，系统会把内容标记为过期
         let stale = Date().addingTimeInterval(120)
 
         Task {
@@ -128,18 +154,16 @@ final class LiveActivityController {
         }
     }
 
-    // MARK: - 结束
-
-    func stop() {
-        guard #available(iOS 16.1, *) else { return }
-        guard let activity = activity else { return }
-        self.activity = nil
+    @available(iOS 16.1, *)
+    private func stopAvailable() {
+        guard let target = activity else { return }
+        activity = nil
 
         Task {
             if #available(iOS 16.2, *) {
-                await activity.end(nil, dismissalPolicy: .immediate)
+                await target.end(nil, dismissalPolicy: .immediate)
             } else {
-                await activity.end(using: nil, dismissalPolicy: .immediate)
+                await target.end(using: nil, dismissalPolicy: .immediate)
             }
         }
     }

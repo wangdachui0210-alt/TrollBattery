@@ -50,7 +50,7 @@ final class LiveActivityController {
         return false
     }
 
-    /// 系统层面是否开放实时活动（用户可在「设置 › 巨魔电池」中单独关闭）
+    /// 系统层面是否开放实时活动（用户可在「设置 › 充电助手」中单独关闭）
     var isSystemEnabled: Bool {
         if #available(iOS 16.1, *) {
             return ActivityAuthorizationInfo().areActivitiesEnabled
@@ -70,7 +70,7 @@ final class LiveActivityController {
     /// 无法启动时的原因，用于界面提示
     var unavailableReason: String? {
         guard Self.isSupported else { return "当前系统低于 iOS 16.1，不支持实时活动" }
-        guard isSystemEnabled else { return "实时活动已被系统关闭，请在「设置 › 巨魔电池」中开启" }
+        guard isSystemEnabled else { return "实时活动已被系统关闭，请在「设置 › 充电助手」中开启" }
         return nil
     }
 

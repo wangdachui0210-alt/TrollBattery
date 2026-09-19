@@ -58,7 +58,7 @@ struct ContentView: View {
         Card {
             VStack(spacing: 16) {
                 HStack(spacing: 8) {
-                    Text("巨魔电池")
+                    Text("充电助手")
                         .font(.system(size: 17, weight: .bold))
                         .foregroundColor(Palette.primaryText)
                     Spacer()
